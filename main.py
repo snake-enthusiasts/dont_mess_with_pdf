@@ -1,16 +1,31 @@
 import PyPDF2
+from settings import Settings
 
 class Main(object):
     """The main class of application"""
 
     def __init__(self):
-        self.pdfFileObj = open('examples/PythonCrashCourse.pdf', 'rb')
-        self.pdfReader = PyPDF2.PdfFileReader(self.pdfFileObj)
-        print(self.pdfReader.numPages)
+        self.settings = Settings()
 
-    def get_text_from_page(self, number):
+        self.file_name = self.settings.file_name
+        self._read_file(self.file_name)
+        self.num_pages = self.pdfReader.numPages
+
+        self.text_to_search = self.settings.text_to_search
+
+    def _get_text_from_page(self, number):
         self.pageObj = self.pdfReader.getPage(number)
-        print(self.pageObj.extractText())
+        return self.pageObj.extractText()
+
+    def _read_file(self, file_name):
+        self.pdfFileObj = open(file_name, 'rb')
+        self.pdfReader = PyPDF2.PdfFileReader(self.pdfFileObj)
+
+    def counting_text_on_pages(self):
+        for page in range(self.num_pages):
+            text = self._get_text_from_page(page)
+            if self.text_to_search in text:
+                print(page)
 
 pdf = Main()
-pdf.get_text_from_page(8)
+pdf.counting_text_on_pages()

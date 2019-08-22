@@ -24,8 +24,14 @@ class Main(object):
     def counting_text_on_pages(self):
         for page in range(self.num_pages):
             text = self._get_text_from_page(page)
-            if self.text_to_search in text:
-                print(page)
+            number = text.count(self.text_to_search)
+            if number:
+                definition_part = self._get_definition_part(text)
+                print(page + 1, " ", number, " ", definition_part)
+
+    def _get_definition_part(self, text):
+        start = text.find(self.text_to_search)
+        return text[start + 5: start + 20]
 
 pdf = Main()
 pdf.counting_text_on_pages()
